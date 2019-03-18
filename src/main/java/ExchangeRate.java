@@ -2,8 +2,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -83,159 +82,135 @@ public class ExchangeRate {
         PLZ_Sale.setText(String.valueOf((Double) sale_json_plz.get("saleRate")));
     }
 
-    private void UI(){
-        JFrame frame = new JFrame("Get JSON");
+    private void userInterface(){
+        JFrame frame = new JFrame("Exchange Rate");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
 
-        GridBagLayout gbl = new GridBagLayout();
+        GridBagLayout gbLayout = new GridBagLayout();
         JPanel panel = new JPanel();
         frame.add(panel);
-        panel.setLayout(gbl);
+        panel.setLayout(gbLayout);
 
-        GridBagConstraints c =  new GridBagConstraints();
+        GridBagConstraints constraints =  new GridBagConstraints();
 
-        label = new JLabel("Purchase");
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 1; // Положення по горизонталі;
-        c.gridy = 0; // Положення по вертикалі;
-        c.insets = new Insets(5,15,5,5); // Відступи;
-        panel.add(label, c);
+        buildLabel(panel, constraints, "Purchase", 1, 0, 15);
 
-        label = new JLabel("Sale");
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 2;
-        c.gridy = 0;
-        c.insets = new Insets(5,40,5,5);
-        panel.add(label, c);
+        buildLabel(panel, constraints, "Sale", 2, 0, 37);
 
-        label = new JLabel("USD");
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0;
-        c.gridy = 1;
-        c.insets = new Insets(5,5,5,5);
-        panel.add(label, c);
+        buildLabel(panel, constraints, "USD", 0, 1, 5);
 
-        label = new JLabel("EUR");
-        c.gridx = 0;
-        c.gridy = 2;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        panel.add(label, c);
+        buildLabel(panel, constraints, "EUR", 0, 2, 5);
 
-        label = new JLabel("GBP");
-        c.gridx = 0;
-        c.gridy = 3;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        panel.add(label, c);
+        buildLabel(panel, constraints, "GBP", 0, 3, 5);
 
-        label = new JLabel("PLZ");
-        c.gridx = 0;
-        c.gridy = 4;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        panel.add(label, c);
+        buildLabel(panel, constraints, "PLZ", 0, 4, 5);
 
         USD_Purchase = new JTextField();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.ipadx = 80;
-        c.insets = new Insets(5,0,0,0);
-        c.gridx = 1;
-        c.gridwidth = 1;
-        c.gridy = 1;
-        panel.add(USD_Purchase, c);
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.ipadx = 80;
+        constraints.gridx = 1;
+        constraints.gridy = 1;
+        constraints.insets = new Insets(5,0,0,0);
+        panel.add(USD_Purchase, constraints);
 
         EUR_Purchase = new JTextField();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.insets = new Insets(5,0,0,0);
-        c.gridx = 1;
-        c.gridwidth = 1;
-        c.gridy = 2;
-        panel.add(EUR_Purchase, c);
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.ipadx = 80;
+        constraints.gridx = 1;
+        constraints.gridy = 2;
+        constraints.insets = new Insets(5,0,0,0);
+        panel.add(EUR_Purchase, constraints);
 
         GBP_Purchase = new JTextField();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.insets = new Insets(5,0,0,0);
-        c.gridx = 1;
-        c.gridwidth = 1;
-        c.gridy = 3;
-        panel.add(GBP_Purchase, c);
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.ipadx = 80;
+        constraints.gridx = 1;
+        constraints.gridy = 3;
+        constraints.insets = new Insets(5,0,0,0);
+        panel.add(GBP_Purchase, constraints);
 
         PLZ_Purchase = new JTextField();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.insets = new Insets(5,0,0,0);
-        c.gridx = 1;
-        c.gridwidth = 1;
-        c.gridy = 4;
-        panel.add(PLZ_Purchase, c);
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.ipadx = 80;
+        constraints.gridx = 1;
+        constraints.gridy = 4;
+        constraints.insets = new Insets(5,0,0,0);
+        panel.add(PLZ_Purchase, constraints);
 
         USD_Sale = new JTextField();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.insets = new Insets(5,10,0,5);
-        c.ipadx = 80;
-        c.gridx = 2;
-        c.gridwidth = 1;
-        c.gridy = 1;
-        panel.add(USD_Sale, c);
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.ipadx = 80;
+        constraints.gridx = 2;
+        constraints.gridy = 1;
+        constraints.insets = new Insets(5,10,0,5);
+        panel.add(USD_Sale, constraints);
 
         EUR_Sale = new JTextField();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.insets = new Insets(5,10,0,5);
-        c.gridx = 2;
-        c.gridwidth = 1;
-        c.gridy = 2;
-        panel.add(EUR_Sale, c);
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.ipadx = 80;
+        constraints.gridx = 2;
+        constraints.gridy = 2;
+        constraints.insets = new Insets(5,10,0,5);
+        panel.add(EUR_Sale, constraints);
 
         GBP_Sale = new JTextField();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.insets = new Insets(5,10,0,5);
-        c.gridx = 2;
-        c.gridwidth = 1;
-        c.gridy = 3;
-        panel.add(GBP_Sale, c);
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.ipadx = 80;
+        constraints.gridx = 2;
+        constraints.gridy = 3;
+        constraints.insets = new Insets(5,10,0,5);
+        panel.add(GBP_Sale, constraints);
 
         PLZ_Sale = new JTextField();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.insets = new Insets(5,10,0,5);
-        c.gridx = 2;
-        c.gridwidth = 1;
-        c.gridy = 4;
-        panel.add(PLZ_Sale, c);
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.ipadx = 80;
+        constraints.gridx = 2;
+        constraints.gridy = 4;
+        constraints.insets = new Insets(5,10,0,5);
+        panel.add(PLZ_Sale, constraints);
+
 
         JButton getButton = new JButton("Get Exchange Rate");
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.ipadx = 10;      // size
-        c.ipady = 0;       // reset to default
-        c.weighty = 1.0;   // request any extra vertical space
-        c.anchor = GridBagConstraints.PAGE_END; //bottom of space
-        c.insets = new Insets(5,5,10,10);  // padding
-        c.gridx = 1;       // row
-        c.gridwidth = 2;   // 2 columns wide
-        c.gridy = 6;       // column
-        panel.add(getButton, c);
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.ipadx = 10;      // size
+        constraints.gridx = 1;       // row
+        constraints.gridy = 6;       // column
+        constraints.gridwidth = 2;   // 2 columns wide
+        constraints.anchor = GridBagConstraints.PAGE_END; //bottom of space
+        constraints.insets = new Insets(5,5,10,10);  // padding
+        panel.add(getButton, constraints);
         getButton.addActionListener(getButtonListener());
 
         frame.pack();
     }
 
+    // build method for labels
+    private void buildLabel(JPanel panel, GridBagConstraints constraints, String purchase, int i, int i2, int i3) {
+        label = new JLabel(purchase);
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.gridx = i;
+        constraints.gridy = i2;
+        constraints.insets = new Insets(5, i3, 5, 5);
+        panel.add(label, constraints);
+    }
+
     private ActionListener getButtonListener() {
-        ActionListener action = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    httpGetRequest();
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
+        return e -> {
+            try {
+                httpGetRequest();
+            } catch (Exception e1) {
+                e1.printStackTrace();
             }
         };
-        return action;
     }
 
     public static void main(String[] args) {
         try{
             ExchangeRate call = new ExchangeRate();
-            call.UI();
+            call.userInterface();
         }catch (Exception e){
             e.printStackTrace();
         }
