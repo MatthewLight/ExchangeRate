@@ -11,78 +11,32 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class ExchangeRate {
-    private JTextField USD_Purchase;
-    private JTextField EUR_Purchase;
-    private JTextField GBP_Purchase;
-    private JTextField PLZ_Purchase;
 
-    private JTextField USD_Sale;
-    private JTextField EUR_Sale;
-    private JTextField GBP_Sale;
-    private JTextField PLZ_Sale;
-
-    private JLabel label;
-
-    private void httpGetRequest() throws Exception {
-        LocalDate localDate = LocalDate.now();
-        LocalDate yesterday = localDate.minusDays(2);
-
-        String url = "https://api.privatbank.ua/p24api/exchange_rates?json&date=";
-        String date = DateTimeFormatter.ofPattern("dd.MM.yyy").format(yesterday);
-
-        URL obj = new URL(url + date);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-        // optional default is GET
-        con.setRequestMethod("GET");
-
-        //add request header
-        con.setRequestProperty("User-Agent", "Mozilla/5.0");
-
-        int responseCode = con.getResponseCode();
-        System.out.println("\nSending 'GET' request to URL : " + url + date);
-        System.out.println("Response Code : " + responseCode);
-
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
-
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
+    public static void main(String[] args) {
+        try{
+            UserInterface callUI = new UserInterface();
+            callUI.userInterface();
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        in.close();
-
-        // JSON get result
-        JSONObject jsonResponse = new JSONObject(response.toString());
-        JSONArray jsonArray = jsonResponse.getJSONArray("exchangeRate");
-
-        JSONObject purchase_json_usd = (JSONObject) jsonArray.get(16);
-        USD_Purchase.setText(String.valueOf((Double) purchase_json_usd.get("purchaseRate")));
-
-        JSONObject purchase_json_eur = (JSONObject) jsonArray.get(22);
-        EUR_Purchase.setText(String.valueOf((Double) purchase_json_eur.get("purchaseRate")));
-
-        JSONObject purchase_json_gbp = (JSONObject) jsonArray.get(15);
-        GBP_Purchase.setText(String.valueOf((Double) purchase_json_gbp.get("purchaseRate")));
-
-        JSONObject purchase_json_plz = (JSONObject) jsonArray.get(25);
-        PLZ_Purchase.setText(String.valueOf((Double) purchase_json_plz.get("purchaseRate")));
-
-        JSONObject sale_json_usd = (JSONObject) jsonArray.get(16);
-        USD_Sale.setText(String.valueOf((Double) sale_json_usd.get("saleRate")));
-
-        JSONObject sale_json_eur = (JSONObject) jsonArray.get(22);
-        EUR_Sale.setText(String.valueOf((Double) sale_json_eur.get("saleRate")));
-
-        JSONObject sale_json_gbp = (JSONObject) jsonArray.get(15);
-        GBP_Sale.setText(String.valueOf((Double) sale_json_gbp.get("saleRate")));
-
-        JSONObject sale_json_plz = (JSONObject) jsonArray.get(25);
-        PLZ_Sale.setText(String.valueOf((Double) sale_json_plz.get("saleRate")));
     }
+}
 
-    private void userInterface(){
+class UserInterface{
+    JTextField USD_Purchase;
+    JTextField EUR_Purchase;
+    JTextField GBP_Purchase;
+    JTextField PLZ_Purchase;
+
+    JTextField USD_Sale;
+    JTextField EUR_Sale;
+    JTextField GBP_Sale;
+    JTextField PLZ_Sale;
+
+    JLabel label;
+
+    JButton getButton;
+    void userInterface(){
         JFrame frame = new JFrame("Exchange Rate");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
@@ -173,7 +127,7 @@ public class ExchangeRate {
         panel.add(PLZ_Sale, constraints);
 
 
-        JButton getButton = new JButton("Get Exchange Rate");
+        getButton = new JButton("Get Exchange Rate");
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.ipadx = 10;      // size
         constraints.gridx = 1;       // row
@@ -188,31 +142,84 @@ public class ExchangeRate {
     }
 
     // build method for labels
-    private void buildLabel(JPanel panel, GridBagConstraints constraints, String purchase, int i, int i2, int i3) {
+    private void buildLabel(JPanel panel, GridBagConstraints constraints, String purchase, int positionX, int positionY, int paddingLeft) {
         label = new JLabel(purchase);
         constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.gridx = i;
-        constraints.gridy = i2;
-        constraints.insets = new Insets(5, i3, 5, 5);
+        constraints.gridx = positionX;
+        constraints.gridy = positionY;
+        constraints.insets = new Insets(5, paddingLeft, 5, 5);
         panel.add(label, constraints);
     }
 
     private ActionListener getButtonListener() {
         return e -> {
             try {
-                httpGetRequest();
+                HttpSendRequest httpObject = new HttpSendRequest();
+                httpObject.httpGetRequest();
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
         };
     }
+}
 
-    public static void main(String[] args) {
-        try{
-            ExchangeRate call = new ExchangeRate();
-            call.userInterface();
-        }catch (Exception e){
-            e.printStackTrace();
+class HttpSendRequest extends UserInterface{
+    void httpGetRequest() throws Exception {
+        LocalDate localDate = LocalDate.now();
+        LocalDate yesterday = localDate.minusDays(2);
+
+        String url = "https://api.privatbank.ua/p24api/exchange_rates?json&date=";
+        String date = DateTimeFormatter.ofPattern("dd.MM.yyy").format(yesterday);
+
+        URL obj = new URL(url + date);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+        // optional default is GET
+        con.setRequestMethod("GET");
+
+        //add request header
+        con.setRequestProperty("User-Agent", "Mozilla/5.0");
+
+        int responseCode = con.getResponseCode();
+        System.out.println("\nSending 'GET' request to URL : " + url + date);
+        System.out.println("Response Code : " + responseCode);
+
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
         }
+        in.close();
+
+        // JSON get result
+        JSONObject jsonResponse = new JSONObject(response.toString());
+        JSONArray jsonArray = jsonResponse.getJSONArray("exchangeRate");
+
+        JSONObject purchase_json_usd = (JSONObject) jsonArray.get(16);
+        USD_Purchase.setText(String.valueOf((Double) purchase_json_usd.get("purchaseRate")));
+
+        JSONObject purchase_json_eur = (JSONObject) jsonArray.get(22);
+        EUR_Purchase.setText(String.valueOf((Double) purchase_json_eur.get("purchaseRate")));
+
+        JSONObject purchase_json_gbp = (JSONObject) jsonArray.get(15);
+        GBP_Purchase.setText(String.valueOf((Double) purchase_json_gbp.get("purchaseRate")));
+
+        JSONObject purchase_json_plz = (JSONObject) jsonArray.get(25);
+        PLZ_Purchase.setText(String.valueOf((Double) purchase_json_plz.get("purchaseRate")));
+
+        JSONObject sale_json_usd = (JSONObject) jsonArray.get(16);
+        USD_Sale.setText(String.valueOf((Double) sale_json_usd.get("saleRate")));
+
+        JSONObject sale_json_eur = (JSONObject) jsonArray.get(22);
+        EUR_Sale.setText(String.valueOf((Double) sale_json_eur.get("saleRate")));
+
+        JSONObject sale_json_gbp = (JSONObject) jsonArray.get(15);
+        GBP_Sale.setText(String.valueOf((Double) sale_json_gbp.get("saleRate")));
+
+        JSONObject sale_json_plz = (JSONObject) jsonArray.get(25);
+        PLZ_Sale.setText(String.valueOf((Double) sale_json_plz.get("saleRate")));
     }
 }
