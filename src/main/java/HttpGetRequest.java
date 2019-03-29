@@ -1,3 +1,6 @@
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -5,8 +8,8 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-class HttpGetRequest extends UserInterface{
-    StringBuffer response = new StringBuffer();
+class HttpGetRequest extends UserInterface {
+    private StringBuffer response = new StringBuffer();
 
     void httpGetRequest() throws Exception {
         LocalDate localDate = LocalDate.now();
@@ -36,5 +39,31 @@ class HttpGetRequest extends UserInterface{
             response.append(inputLine);
         }
         in.close();
+
+        JSONObject jsonResponse = new JSONObject(response.toString());
+        JSONArray jsonArray = jsonResponse.getJSONArray("exchangeRate");
+        JSONObject purchase_json_usd = (JSONObject) jsonArray.get(16);
+        USD_Purchase.setText(String.valueOf(purchase_json_usd.get("purchaseRate")));
+
+        JSONObject purchase_json_eur = (JSONObject) jsonArray.get(22);
+        EUR_Purchase.setText(String.valueOf(purchase_json_eur.get("purchaseRate")));
+
+        JSONObject purchase_json_gbp = (JSONObject) jsonArray.get(15);
+        GBP_Purchase.setText(String.valueOf(purchase_json_gbp.get("purchaseRate")));
+
+        JSONObject purchase_json_plz = (JSONObject) jsonArray.get(25);
+        PLZ_Purchase.setText(String.valueOf(purchase_json_plz.get("purchaseRate")));
+
+        JSONObject sale_json_usd = (JSONObject) jsonArray.get(16);
+        USD_Sale.setText(String.valueOf(sale_json_usd.get("saleRate")));
+
+        JSONObject sale_json_eur = (JSONObject) jsonArray.get(22);
+        EUR_Sale.setText(String.valueOf(sale_json_eur.get("saleRate")));
+
+        JSONObject sale_json_gbp = (JSONObject) jsonArray.get(15);
+        GBP_Sale.setText(String.valueOf(sale_json_gbp.get("saleRate")));
+
+        JSONObject sale_json_plz = (JSONObject) jsonArray.get(25);
+        PLZ_Sale.setText(String.valueOf(sale_json_plz.get("saleRate")));
     }
 }

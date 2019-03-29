@@ -3,19 +3,19 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 class UserInterface{
-    JTextField USD_Purchase;
-    JTextField EUR_Purchase;
-    JTextField GBP_Purchase;
-    JTextField PLZ_Purchase;
+    JTextField USD_Purchase = new JTextField();
+    JTextField EUR_Purchase = new JTextField();
+    JTextField GBP_Purchase = new JTextField();
+    JTextField PLZ_Purchase = new JTextField();
 
-    JTextField USD_Sale;
-    JTextField EUR_Sale;
-    JTextField GBP_Sale;
-    JTextField PLZ_Sale;
+    JTextField USD_Sale = new JTextField();
+    JTextField EUR_Sale = new JTextField();
+    JTextField GBP_Sale = new JTextField();
+    JTextField PLZ_Sale = new JTextField();
 
     JLabel label;
 
-    JButton getButton;
+    JButton getButton = new JButton("Get Exchange Rate");;
 
     void userInterface(){
         JFrame frame = new JFrame("Exchange Rate");
@@ -43,88 +43,42 @@ class UserInterface{
 
         buildLabel(panel, constraints, "PLZ", 0, 4, 5);
 
-        USD_Purchase = new JTextField();
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.ipadx = 80;
-        constraints.gridx = 1;
-        constraints.gridy = 1;
-        constraints.insets = new Insets(5,0,0,0);
+        buildTextField(constraints, 1, 1, 0, 0);
         panel.add(USD_Purchase, constraints);
 
-        EUR_Purchase = new JTextField();
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.ipadx = 80;
-        constraints.gridx = 1;
-        constraints.gridy = 2;
-        constraints.insets = new Insets(5,0,0,0);
+        buildTextField(constraints, 1, 2, 0, 0);
         panel.add(EUR_Purchase, constraints);
 
-        GBP_Purchase = new JTextField();
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.ipadx = 80;
-        constraints.gridx = 1;
-        constraints.gridy = 3;
-        constraints.insets = new Insets(5,0,0,0);
+        buildTextField(constraints, 1, 3, 0, 0);
         panel.add(GBP_Purchase, constraints);
 
-        PLZ_Purchase = new JTextField();
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.ipadx = 80;
-        constraints.gridx = 1;
-        constraints.gridy = 4;
-        constraints.insets = new Insets(5,0,0,0);
+        buildTextField(constraints, 1, 4, 0, 0);
         panel.add(PLZ_Purchase, constraints);
 
-        USD_Sale = new JTextField();
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.ipadx = 80;
-        constraints.gridx = 2;
-        constraints.gridy = 1;
-        constraints.insets = new Insets(5,10,0,5);
+        buildTextField(constraints, 2, 1, 10, 5);
         panel.add(USD_Sale, constraints);
 
-        EUR_Sale = new JTextField();
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.ipadx = 80;
-        constraints.gridx = 2;
-        constraints.gridy = 2;
-        constraints.insets = new Insets(5,10,0,5);
+        buildTextField(constraints, 2, 2, 10, 5);
         panel.add(EUR_Sale, constraints);
 
-        GBP_Sale = new JTextField();
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.ipadx = 80;
-        constraints.gridx = 2;
-        constraints.gridy = 3;
-        constraints.insets = new Insets(5,10,0,5);
+        buildTextField(constraints, 2, 3, 10, 5);
         panel.add(GBP_Sale, constraints);
 
-        PLZ_Sale = new JTextField();
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.ipadx = 80;
-        constraints.gridx = 2;
-        constraints.gridy = 4;
-        constraints.insets = new Insets(5,10,0,5);
+        buildTextField(constraints, 2, 4, 10, 5);
         panel.add(PLZ_Sale, constraints);
 
 
-        getButton = new JButton("Get Exchange Rate");
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.ipadx = 10;      // size
-        constraints.gridx = 1;       // row
-        constraints.gridy = 6;       // column
-        constraints.gridwidth = 2;   // 2 columns wide
-        constraints.anchor = GridBagConstraints.PAGE_END; //bottom of space
-        constraints.insets = new Insets(5,5,10,10);  // padding
+        buildButton(constraints);
         panel.add(getButton, constraints);
         getButton.addActionListener(getButtonListener());
 
         frame.pack();
     }
 
+
     // build method for labels
-    private void buildLabel(JPanel panel, GridBagConstraints constraints, String purchase, int positionX, int positionY, int paddingLeft) {
-        label = new JLabel(purchase);
+    private void buildLabel(JPanel panel, GridBagConstraints constraints, String title, int positionX, int positionY, int paddingLeft) {
+        label = new JLabel(title);
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridx = positionX;
         constraints.gridy = positionY;
@@ -132,13 +86,31 @@ class UserInterface{
         panel.add(label, constraints);
     }
 
+    // build method for TextFields
+    private void buildTextField(GridBagConstraints constraints, int positionX, int positionY, int paddingLeft, int paddingRight){
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.ipadx = 80;
+        constraints.gridx = positionX;
+        constraints.gridy = positionY;
+        constraints.insets = new Insets(5, paddingLeft,0, paddingRight);
+    }
+
+    // build method for button
+    private void buildButton(GridBagConstraints constraints){
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.ipadx = 10;      // size
+        constraints.gridx = 1;       // row
+        constraints.gridy = 6;       // column
+        constraints.gridwidth = 2;   // 2 columns wide
+        constraints.anchor = GridBagConstraints.PAGE_END; //bottom of space
+        constraints.insets = new Insets(5,5,10,10);  // padding
+    }
+
     private ActionListener getButtonListener() {
         return e -> {
             try {
                 HttpGetRequest httpObject = new HttpGetRequest();
-                JSONParser getJSONData = new JSONParser();
                 httpObject.httpGetRequest();
-                getJSONData.getJSON();
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
