@@ -209,8 +209,13 @@ public class ExchangeRate {
 
     public static void main(String[] args) {
         try{
+<<<<<<< Updated upstream
             ExchangeRate call = new ExchangeRate();
             call.userInterface();
+=======
+            UserInterface callUI = new UserInterface();
+            callUI.createUI();
+>>>>>>> Stashed changes
         }catch (Exception e){
             e.printStackTrace();
         }
